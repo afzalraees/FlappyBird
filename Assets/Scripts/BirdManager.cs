@@ -49,7 +49,7 @@ public class BirdManager : MonoBehaviour
 
     IEnumerator StopPhysics()
     {
-        yield return new WaitForSeconds(1.1f);
+        yield return new WaitForSeconds(0.2f);
         Time.timeScale = 0.0f;
     }
 }

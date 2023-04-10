@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     public GameObject playButton;
     public Text score;
     public Text finalScore;
-    public GameObject gameOverScreen;
+    public GameObject gameOverScreen, pauseScreen;
 
     public static UIManager instance;
     // Start is called before the first frame update
@@ -29,6 +29,18 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void Pause()
+    {
+        pauseScreen.SetActive(true);
+        StartCoroutine(StopPhysics());
+    }
+
+    public void Continue()
+    {
+        pauseScreen.SetActive(false);
+        Time.timeScale = 1.0f;
+    }
+
     public void PlayGame()
     {
         playButton.SetActive(false);
@@ -39,9 +51,9 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0.0f;
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator StopPhysics()
     {
-        
+        yield return new WaitForSeconds(0.2f);
+        Time.timeScale = 0.0f;
     }
 }
