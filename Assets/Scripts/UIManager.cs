@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public Text score;
     public Text finalScore;
     public GameObject gameOverScreen, pauseScreen;
+    public bool uiActive;
 
     public static UIManager instance;
     // Start is called before the first frame update
@@ -33,27 +34,39 @@ public class UIManager : MonoBehaviour
     {
         pauseScreen.SetActive(true);
         StartCoroutine(StopPhysics());
+        uiActive = true;
     }
 
     public void Continue()
     {
         pauseScreen.SetActive(false);
         Time.timeScale = 1.0f;
+        uiActive = false;
     }
 
     public void PlayGame()
     {
         playButton.SetActive(false);
         Time.timeScale = 1.0f;
+        uiActive = false;
     }
     void Start()
     {
         Time.timeScale = 0.0f;
+        uiActive = true;
     }
 
     IEnumerator StopPhysics()
     {
         yield return new WaitForSeconds(0.2f);
         Time.timeScale = 0.0f;
+    }
+
+    public void GameOver()
+    {
+        uiActive = true;
+        finalScore.text = "Final Score: " + BirdManager.instance.score.ToString();
+        gameOverScreen.SetActive(true);
+        StartCoroutine(StopPhysics());
     }
 }

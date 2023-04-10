@@ -7,7 +7,17 @@ public class BirdManager : MonoBehaviour
     // Start is called before the first frame update
     Rigidbody2D rb;
     [SerializeField] float jumpForce;
-    float score;
+    public int score;
+
+    public static BirdManager instance;
+
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -16,21 +26,24 @@ public class BirdManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(!UIManager.instance.uiActive)
         {
-            rb.AddForce(Vector2.up * jumpForce);
-        }
-        if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-        {
-            rb.AddForce(Vector2.up * jumpForce);
-        }
+            if (Input.GetMouseButtonDown(0))
+            {
+                rb.AddForce(Vector2.up * jumpForce);
+            }
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                rb.AddForce(Vector2.up * jumpForce);
+            }
+        }        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.transform.tag.Contains("Border") || collision.transform.tag.Contains("pipe"))
         {
-            GameOver();
+            UIManager.instance.GameOver();
         }
 
         if (collision.transform.tag.Contains("Way"))
@@ -40,12 +53,7 @@ public class BirdManager : MonoBehaviour
         }
     }
 
-    void GameOver()
-    {
-        UIManager.instance.finalScore.text = "Final Score: " + score.ToString();
-        UIManager.instance.gameOverScreen.SetActive(true);
-        StartCoroutine(StopPhysics());
-    }
+    
 
     IEnumerator StopPhysics()
     {
